@@ -1,0 +1,32 @@
+/* ==== 薬剤師キャリアノート：ページ枠（提携申請用記事） ====
+   部品の見た目は parts.css（LPパーツ集_体験談ランキング型・無改変）。
+   ここにはページ枠・サイト名の帯・フッター・改行調整だけを置く。 */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: #fff; padding-bottom: 90px; } /* mt-sticky のぶん */
+img { max-width: 100%; height: auto; }
+.mt-wrap { max-width: 680px; margin: 0 auto; padding: 0 16px 24px; }
+.mt-sitebar a { color: inherit; text-decoration: none; }
+.mt-sitebar--foot { margin-top: 2em; }
+.mt-prbar { margin-top: .8em; }
+
+.lp-title { margin: .9em 0 .5em; font-size: 22px; font-weight: 900; line-height: 1.5; text-wrap-style: balance; }
+
+/* 改行：本文は自然に折り返し、見出し・強調は語句の途中で切らない */
+.mt-body p, .mt-body li { text-wrap-style: pretty; }
+.mt-h2, .mt-h3, .mt-h4, .mt-oneline, .mt-worry, .mt-cta__micro, .mt-conclusion__ttl { text-wrap-style: balance; }
+.lp-nw { display: inline-block; }
+
+/* サービス早見（mt-spec）の中の一行強調 */
+.mt-spec > .mt-oneline { margin: .3em 1em 0 !important; text-align: center; }
+.mt-spec__grid + .mt-oneline { margin-top: 1em !important; }
+.mt-spec__grid { border-bottom: 2px solid var(--mt-blue); }
+
+/* フッター */
+.site-foot { padding: 1em 16px 1.6em; background: #f5f5f5; font-family: var(--mt-font); text-align: center; }
+.site-foot nav { display: flex; flex-wrap: wrap; justify-content: center; gap: .3em 1.2em; margin: 0 0 .6em; font-size: 13px; }
+.site-foot a { color: var(--mt-ink); }
+.site-foot small { font-size: 12px; color: var(--mt-sub); }
+
+/* フリー素材イラスト（いらすとや）：横幅いっぱいにせず中央に */
+.lp-illust { max-width: 300px; margin: 1em auto 1.2em; }
+.lp-illust--sm { max-width: 200px; }
