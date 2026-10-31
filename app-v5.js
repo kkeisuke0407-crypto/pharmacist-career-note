@@ -30,6 +30,8 @@
  function goTo(n,smooth=true) {
   n=Math.min(last,Math.max(1,n));
   deck.scrollTo({left:(n-1)*deck.clientWidth,behavior:smooth&&!reduce.matches?'smooth':'instant'});
+  // A jump (link #pN, resize) does not wait for the observer, which may not run until the next frame
+  if(!smooth)activate(n);
  }
  function go(delta){emit('swipe_navigation',{direction:delta>0?'next':'previous'});goTo(current+delta);}
  previous.addEventListener('click',()=>go(-1));next.addEventListener('click',()=>go(1));
