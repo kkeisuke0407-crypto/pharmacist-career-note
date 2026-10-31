@@ -1,0 +1,22 @@
+/* Hallmark · macrostructure: Narrative Workflow · tone: editorial manga · anchor hue: teal */
+:root {
+  --color-paper: oklch(97% 0.012 85);
+  --color-paper-2: oklch(93% 0.014 85);
+  --color-ink: oklch(25% 0.014 170);
+  --color-muted: oklch(44% 0.014 170);
+  --color-rule: oklch(80% 0.015 170);
+  --color-accent: oklch(40% 0.065 180);
+  --color-accent-ink: oklch(99% 0.005 85);
+  --color-focus: oklch(48% 0.15 32);
+  --color-error: oklch(45% 0.16 30);
+  --font-display: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+  --font-body: "Meiryo", "Hiragino Sans", sans-serif;
+  --space-xs: 4px; --space-sm: 8px; --space-md: 16px;
+  --space-lg: 24px; --space-xl: 32px;
+  --text-sm: 12px; --text-md: 14px; --text-body: 16px;
+  --ease-out: cubic-bezier(.2,.7,.2,1);
+  --ease-in: cubic-bezier(.4,0,1,1);
+  --ease-in-out: cubic-bezier(.4,0,.2,1);
+  --dur-short: 140ms; --rule-thin: 1px; --radius-sm: 4px;
+  --header-height: 56px; --dock-height: 132px;
+}
