@@ -7,7 +7,12 @@
  const seen=new Set(),ratios=new Map(),last=slides.length;
  const variant=(new URLSearchParams(location.search).get('cta')||'b').toLowerCase();
  if(/^[abcd]$/.test(variant))document.body.dataset.cta=variant;
- slides.forEach(slide=>{const art=slide.querySelector('.art>img'),b=art.cloneNode();b.className='backdrop';b.alt='';b.removeAttribute('fetchpriority');b.setAttribute('aria-hidden','true');slide.prepend(b);});
+ // Images load only for the current slide and its neighbours; the blurred backdrop is added only where the art is narrower than the screen
+ function loadSlide(slide){
+  const img=slide.querySelector('.art>img');
+  if(img.dataset.src){img.srcset=img.dataset.srcset;img.src=img.dataset.src;delete img.dataset.src;delete img.dataset.srcset;}
+  if(!slide.querySelector('.backdrop')&&img.parentElement.clientWidth<slide.clientWidth-1){const b=img.cloneNode();b.className='backdrop';b.alt='';b.removeAttribute('fetchpriority');b.setAttribute('aria-hidden','true');slide.prepend(b);}
+ }
  let current=1,timer,started=performance.now(),mouseDrag=null;
  function emit(event,extra={}) { const data={lp_id:'pharma-hitori-image-v5',cta_variant:document.body.dataset.cta,step:current,...extra}; if(typeof window.gtag==='function') window.gtag('event',event,data); else {window.dataLayer=window.dataLayer||[];window.dataLayer.push({event,...data});} }
  function viewed() { clearTimeout(timer);timer=setTimeout(()=>{if(document.visibilityState!=='visible'||dialog.open||seen.has(current))return;seen.add(current);emit('swipe_view');if(current===last)emit('swipe_complete');},600); }
@@ -19,12 +24,12 @@
   document.querySelectorAll('[data-progress]').forEach(el=>{el.dataset.read=String(Number(el.dataset.progress)<=n);});
   previous.disabled=n===1;next.disabled=n===last;
   slides.forEach((slide,i)=>{slide.inert=i!==n-1;});
-  slides.slice(Math.max(0,n-2),Math.min(last,n+2)).forEach(slide=>slide.querySelectorAll('img[loading="lazy"]').forEach(img=>{img.loading='eager';}));
+  slides.slice(Math.max(0,n-2),Math.min(last,n+2)).forEach(loadSlide);
   viewed();
  }
  function goTo(n,smooth=true) {
   n=Math.min(last,Math.max(1,n));
-  deck.scrollTo({left:-(n-1)*deck.clientWidth,behavior:smooth&&!reduce.matches?'smooth':'instant'});
+  deck.scrollTo({left:(n-1)*deck.clientWidth,behavior:smooth&&!reduce.matches?'smooth':'instant'});
  }
  function go(delta){emit('swipe_navigation',{direction:delta>0?'next':'previous'});goTo(current+delta);}
  previous.addEventListener('click',()=>go(-1));next.addEventListener('click',()=>go(1));
@@ -43,6 +48,6 @@
  document.addEventListener('visibilitychange',()=>document.visibilityState==='visible'?viewed():clearTimeout(timer));
  document.querySelectorAll('[data-consult]').forEach(a=>a.addEventListener('click',()=>emit('affiliate_click',{placement:a.dataset.consult,destination:'accesstrade_cta',affiliate_tracking_connected:true})));
  document.querySelector('.official-banner a')?.addEventListener('click',()=>emit('affiliate_click',{placement:'official_banner',destination:'accesstrade_banner',affiliate_tracking_connected:true}));
- document.querySelectorAll('.art>img').forEach(img=>{const fail=()=>{if(img.parentElement.querySelector('.image-error'))return;const box=document.createElement('div');box.className='image-error';box.setAttribute('role','status');const source=img.closest('.slide').querySelector('.slide-copy');[...source.querySelectorAll('h1,h2,p')].forEach(el=>{const p=document.createElement('p');p.textContent=el.textContent;box.appendChild(p);});img.parentElement.appendChild(box);};img.addEventListener('error',fail);if(img.complete&&img.naturalWidth===0)fail();});
+ document.querySelectorAll('.art>img').forEach(img=>{const fail=()=>{if(img.parentElement.querySelector('.image-error'))return;const box=document.createElement('div');box.className='image-error';box.setAttribute('role','status');const source=img.closest('.slide').querySelector('.slide-copy');[...source.querySelectorAll('h1,h2,p')].forEach(el=>{const p=document.createElement('p');p.textContent=el.textContent;box.appendChild(p);});img.parentElement.appendChild(box);};img.addEventListener('error',fail);if(img.getAttribute('src')&&img.complete&&img.naturalWidth===0)fail();});
  activate(1);
 })();
