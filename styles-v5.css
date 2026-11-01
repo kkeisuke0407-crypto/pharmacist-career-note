@@ -63,9 +63,12 @@ button:focus-visible,a:focus-visible { outline:3px solid var(--color-focus); out
 .art>img { display:block; width:100%; height:100%; object-fit:cover; user-select:none; -webkit-user-drag:none; }
 
 /* Slide 6: official banner sits where the service name used to be (code and image unaltered, scaled by CSS) */
-.official-banner { position:absolute; left:50%; top:12.6%; width:68%; transform:translateX(-50%); padding:1.4cqw; border-radius:2cqw; background:#fff; box-shadow:0 1.6cqw 5cqw oklch(30% .03 80 / .28); animation:poyon 1s var(--ease-out) infinite; }
+.official-banner { position:absolute; left:16%; top:12.6%; width:68%; padding:1.4cqw; border-radius:2cqw; background:#fff; box-shadow:0 1.6cqw 5cqw oklch(30% .03 80 / .28); }
 .official-banner a { position:relative; display:block; overflow:hidden; border-radius:1cqw; }
-.official-banner a::after { content:""; position:absolute; top:-50%; bottom:-50%; left:-40%; width:22%; background:linear-gradient(90deg,transparent,oklch(100% 0 0 / .85),transparent); transform:rotate(20deg); opacity:0; pointer-events:none; animation:kiran 1s linear infinite; }
+.official-banner a::after { content:""; position:absolute; top:-50%; bottom:-50%; left:-40%; width:22%; background:linear-gradient(90deg,transparent,oklch(100% 0 0 / .85),transparent); transform:rotate(20deg); opacity:0; pointer-events:none; }
+body[data-step="6"] .official-banner { animation:banner-in .9s linear both; }
+body[data-step="6"] .official-banner a::after { animation:kiran 1s linear .9s infinite; }
+@keyframes banner-in { 0% {scale:1;animation-timing-function:var(--ease-out)} 22% {scale:1.22;animation-timing-function:var(--ease-in)} 42% {scale:.94;animation-timing-function:var(--ease-out)} 58% {scale:1.07;animation-timing-function:var(--ease-in)} 72% {scale:.98;animation-timing-function:var(--ease-out)} 86% {scale:1.02;animation-timing-function:var(--ease-in)} 100% {scale:1} }
 .official-banner img { display:block; width:100%; height:auto; }
 
 /* Slide 11: live CTA laid exactly over the button drawn in the art */
@@ -105,11 +108,12 @@ body[data-moved="true"] .hint__finger { animation:none; transform:translateX(-26
 .cta span { display:flex; align-items:center; gap:6px; font:var(--cta-weight) 16px/1.35 var(--cta-font); }
 .cta svg { width:16px; height:16px; }
 .cta:active { transform:translateY(2px); }
-/* Sticky CTA and slide 6 banner: a springy pop and a glint, once a second */
-.sticky-cta { position:relative; overflow:hidden; isolation:isolate; animation:poyon 1s var(--ease-out) infinite; }
-.sticky-cta::after { content:""; position:absolute; top:-50%; bottom:-50%; left:-40%; width:18%; background:linear-gradient(90deg,transparent,oklch(100% 0 0 / .7),transparent); transform:rotate(20deg); opacity:0; pointer-events:none; animation:kiran 1s linear infinite; }
-@keyframes poyon { 0% {scale:1} 14% {scale:1.07 .95} 28% {scale:.97 1.04} 40% {scale:1.02 .99} 52%,100% {scale:1} }
+/* Sticky CTA: a springy pop and a glint, once every 2 seconds */
+.sticky-cta { position:relative; overflow:hidden; isolation:isolate; animation:poyon 2s var(--ease-out) infinite; }
+.sticky-cta::after { content:""; position:absolute; top:-50%; bottom:-50%; left:-40%; width:18%; background:linear-gradient(90deg,transparent,oklch(100% 0 0 / .7),transparent); transform:rotate(20deg); opacity:0; pointer-events:none; animation:kiran-2s 2s linear infinite; }
+@keyframes poyon { 0% {scale:1} 7% {scale:1.07 .95} 14% {scale:.97 1.04} 20% {scale:1.02 .99} 26%,100% {scale:1} }
 @keyframes kiran { 0%,40% {opacity:0;left:-40%} 46% {opacity:1} 80% {opacity:1;left:130%} 84%,100% {opacity:0;left:130%} }
+@keyframes kiran-2s { 0%,20% {opacity:0;left:-40%} 23% {opacity:1} 40% {opacity:1;left:130%} 42%,100% {opacity:0;left:130%} }
 
 /* PR badge fixed at the top right of the frame on every page */
 .pr-badge { position:fixed; z-index:22; top:calc(8px + env(safe-area-inset-top)); right:calc(50% - var(--frame) / 2 + max(8px, env(safe-area-inset-right))); padding:2px 6px; border:1.5px solid oklch(30% .01 85); border-radius:3px; background:oklch(99% .005 85 / .92); color:oklch(25% .01 85); font:700 12px/1.2 var(--font-body); letter-spacing:.06em; pointer-events:none; }
