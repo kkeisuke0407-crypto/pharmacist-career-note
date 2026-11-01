@@ -69,6 +69,17 @@ button:focus-visible,a:focus-visible { outline:3px solid var(--color-focus); out
 body[data-step="6"] .official-banner { animation:banner-in .9s linear both; }
 body[data-step="6"] .official-banner a::after { animation:kiran 1s linear .9s infinite; }
 @keyframes banner-in { 0% {scale:1;animation-timing-function:var(--ease-out)} 22% {scale:1.22;animation-timing-function:var(--ease-in)} 42% {scale:.94;animation-timing-function:var(--ease-out)} 58% {scale:1.07;animation-timing-function:var(--ease-in)} 72% {scale:.98;animation-timing-function:var(--ease-out)} 86% {scale:1.02;animation-timing-function:var(--ease-in)} 100% {scale:1} }
+/* After the bounce, a finger taps the banner's corner with a "クリック" label beside it */
+.tap-hint { position:absolute; right:-11%; bottom:-13%; display:flex; flex-direction:column; align-items:center; gap:.4cqw; pointer-events:none; }
+.tap-hint svg { width:12cqw; height:12cqw; overflow:visible; rotate:-24deg; transform-origin:30% 10%; }
+.tap-hint b { margin-top:-2.4cqw; padding:.5cqw 1.8cqw; border-radius:99px; background:#f26a00; color:#fff; font:900 3.4cqw/1.2 "Noto Sans JP",var(--font-display); letter-spacing:.06em; box-shadow:0 .5cqw 0 #b44a00; white-space:nowrap; }
+.tap-hint i { position:absolute; left:6%; top:-6%; width:7cqw; height:7cqw; border:.7cqw solid #f26a00; border-radius:50%; opacity:0; }
+body[data-step="6"] .tap-hint { animation:tap-in .3s var(--ease-out) .9s both; }
+body[data-step="6"] .tap-hint svg { animation:tap 1s var(--ease-in-out) 1.2s infinite; }
+body[data-step="6"] .tap-hint i { animation:tap-ring 1s var(--ease-out) 1.2s infinite; }
+@keyframes tap-in { from {opacity:0;translate:3cqw 3cqw} to {opacity:1;translate:0 0} }
+@keyframes tap { 0%,100% {translate:0 0} 30% {translate:-1.6cqw -1.6cqw;scale:.92} 45% {translate:0 0;scale:1} }
+@keyframes tap-ring { 0%,28% {opacity:0;scale:.4} 32% {opacity:.9} 70%,100% {opacity:0;scale:1.6} }
 .official-banner img { display:block; width:100%; height:auto; }
 
 /* Slide 11: live CTA laid exactly over the button drawn in the art */
@@ -91,8 +102,8 @@ body[data-step="6"] .official-banner a::after { animation:kiran 1s linear .9s in
 .dock__footer { display:none; text-align:center; font-size:11px; line-height:1.7; color:var(--color-muted); }
 .dock__footer p { margin:0; }
 .dock__footer a { color:inherit; }
-body:is([data-step="6"],[data-step="7"],[data-step="8"],[data-step="9"],[data-step="10"]) .dock__guide { display:none; }
-body:not(:is([data-step="6"],[data-step="7"],[data-step="8"],[data-step="9"],[data-step="10"])) .sticky-cta { display:none; }
+body:is([data-step="7"],[data-step="8"],[data-step="9"],[data-step="10"]) .dock__guide { display:none; }
+body:not(:is([data-step="7"],[data-step="8"],[data-step="9"],[data-step="10"])) .sticky-cta { display:none; }
 body[data-step="11"] .dock__guide { display:none; }
 body[data-step="11"] .dock__footer { display:grid; gap:2px; justify-items:center; }
 
