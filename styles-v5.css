@@ -26,10 +26,12 @@
  --frame:min(100vw,var(--frame-max));
  --vh:100svh;
  --dock-min:calc(64px + env(safe-area-inset-bottom));
+ /* Space above the art (0 = art touches the top). Trial layouts set it with ?top=a|b|c|d */
+ --top-h:0px;
  /* Image fills the width; it only narrows when the screen is too short to keep the dock */
- --img-h:min(calc(var(--frame) * 1.5), calc(var(--vh) - var(--dock-min)));
+ --img-h:min(calc(var(--frame) * 1.5), calc(var(--vh) - var(--top-h) - var(--dock-min)));
  --img-w:calc(var(--img-h) / 1.5);
- --dock-h:calc(var(--vh) - var(--img-h));
+ --dock-h:calc(var(--vh) - var(--top-h) - var(--img-h));
  --cta-bg:linear-gradient(#036969,#00504f);
  --cta-ink:#fff;
  --cta-font:"M PLUS Rounded 1c",var(--font-display);
@@ -44,6 +46,8 @@ body[data-cta="b"] { --cta-bg:linear-gradient(#ff9a1f,#f26a00); --cta-font:"Noto
 body[data-cta="c"] { --cta-bg:#ffd83a; --cta-ink:#1b1b1b; --cta-sub:#1b1b1b; --cta-font:"Zen Kaku Gothic New",var(--font-display); --cta-weight:900; --cta-edge:3px solid #1b1b1b; --cta-depth:1.2cqw 1.2cqw 0 #1b1b1b; --cta-depth-dock:3px 3px 0 #1b1b1b; }
 body[data-cta="d"] { --cta-bg:linear-gradient(#ee2a2a,#c80f14); --cta-font:"Zen Maru Gothic",var(--font-display); --cta-weight:900; --cta-edge:2px solid #fff; --cta-depth:0 0 0 .6cqw #c80f14,0 1.4cqw 0 .6cqw #8c0a0e,0 2cqw 5cqw oklch(35% .12 25 / .3); --cta-depth-dock:0 0 0 2px #c80f14,0 4px 0 2px #8c0a0e; --cta-sub:#ffe45c; }
 @supports(height:100dvh) { :root { --vh:100dvh; } }
+/* Trial: split the spare height so the art and the CTA sit in the middle */
+:root[data-top] { --top-h:max(0px, min(96px, calc((var(--vh) - var(--frame) * 1.5 - 84px) / 2))); }
 * { box-sizing:border-box; }
 html,body { margin:0; width:100%; height:100%; overflow:hidden; background:var(--color-paper); color:var(--color-ink); font:400 16px/1.6 var(--font-body); }
 button,a { -webkit-tap-highlight-color:transparent; }
@@ -55,9 +59,9 @@ button:focus-visible,a:focus-visible { outline:3px solid var(--color-focus); out
 .deck { display:flex; width:var(--frame); height:var(--vh); margin:0 auto; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; scrollbar-width:none; overscroll-behavior-x:contain; touch-action:pan-x pinch-zoom; }
 .deck::-webkit-scrollbar { display:none; }
 .deck.is-dragging { scroll-snap-type:none; cursor:grabbing; user-select:none; }
-.slide { flex:0 0 100%; width:100%; height:100%; position:relative; display:flex; justify-content:center; align-items:flex-start; scroll-snap-align:start; scroll-snap-stop:always; background:var(--color-paper); }
+.slide { flex:0 0 100%; width:100%; height:100%; position:relative; display:flex; justify-content:center; align-items:flex-start; scroll-snap-align:start; scroll-snap-stop:always; padding-top:var(--top-h); background:var(--color-paper); }
 /* Only shows on very short screens, where the art must narrow: the sides become a soft blur of the same picture */
-.backdrop { position:absolute; inset:0 0 auto; width:100%; height:var(--img-h); object-fit:cover; filter:blur(16px) saturate(1.1); transform:scale(1.2); pointer-events:none; }
+.backdrop { position:absolute; inset:var(--top-h) 0 auto; width:100%; height:var(--img-h); object-fit:cover; filter:blur(16px) saturate(1.1); transform:scale(1.2); pointer-events:none; }
 .slide { overflow:hidden; }
 .art { position:relative; width:var(--img-w); height:var(--img-h); margin:0; container-type:inline-size; }
 .art>img { display:block; width:100%; height:100%; object-fit:cover; user-select:none; -webkit-user-drag:none; }
@@ -127,7 +131,17 @@ body[data-moved="true"] .hint__finger { animation:none; transform:translateX(-26
 @keyframes kiran-2s { 0%,20% {opacity:0;left:-40%} 23% {opacity:1} 40% {opacity:1;left:130%} 42%,100% {opacity:0;left:130%} }
 
 /* PR badge fixed at the top right of the frame on every page */
-.pr-badge { position:fixed; z-index:22; top:calc(8px + env(safe-area-inset-top)); right:calc(50% - var(--frame) / 2 + max(8px, env(safe-area-inset-right))); padding:2px 6px; border:1.5px solid oklch(30% .01 85); border-radius:3px; background:oklch(99% .005 85 / .92); color:oklch(25% .01 85); font:700 12px/1.2 var(--font-body); letter-spacing:.06em; pointer-events:none; }
+.pr-badge { position:fixed; z-index:22; top:calc(var(--top-h) + var(--img-h) * .0225); left:calc(50% - var(--img-w) / 2 + var(--img-w) * .018); translate:0 -50%; margin:0; padding:2px 6px; border:1.5px solid oklch(30% .01 85); border-radius:3px; background:oklch(99% .005 85); color:oklch(25% .01 85); font:700 12px/1.2 var(--font-body); letter-spacing:.06em; pointer-events:none; }
+/* Trial top bars: a = blank space, b = progress on top, c = site name, d = site name + progress */
+.topbar { display:none; position:fixed; z-index:21; top:0; left:50%; translate:-50% 0; width:var(--frame); height:var(--top-h); flex-direction:column; justify-content:center; align-items:center; gap:8px; padding:0 16px; }
+:root:is([data-top="b"],[data-top="c"],[data-top="d"]) .topbar { display:flex; }
+.topbar__name { margin:0; font:800 15px/1.2 var(--font-display); letter-spacing:.08em; color:var(--color-accent); }
+.topbar__name small { display:block; margin-top:3px; font:400 10px/1 var(--font-body); letter-spacing:.04em; color:var(--color-muted); text-align:center; }
+.topbar__progress { display:flex; gap:3px; width:100%; height:4px; }
+.topbar__progress span { flex:1; border-radius:2px; background:var(--color-rule); }
+.topbar__progress span[data-read="true"] { background:var(--color-accent); }
+:root[data-top="b"] .topbar__name,:root[data-top="c"] .topbar__progress { display:none; }
+:root:is([data-top="b"],[data-top="d"]) .dock .progress { display:none; }
 
 /* Mouse users get side arrows; phones swipe */
 .side-nav { display:none; }
