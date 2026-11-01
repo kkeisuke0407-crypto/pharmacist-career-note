@@ -14,7 +14,7 @@
   if(!slide.querySelector('.backdrop')&&img.parentElement.clientWidth<slide.clientWidth-1){const b=img.cloneNode();b.className='backdrop';b.alt='';b.removeAttribute('fetchpriority');b.setAttribute('aria-hidden','true');slide.prepend(b);}
  }
  let current=1,timer,started=performance.now(),mouseDrag=null;
- function emit(event,extra={}) { const data={lp_id:'pharma-hitori-image-v5',cta_variant:document.body.dataset.cta,step:current,...extra}; if(typeof window.gtag==='function') window.gtag('event',event,data); else {window.dataLayer=window.dataLayer||[];window.dataLayer.push({event,...data});} }
+ function emit(event,extra={}) { const data={lp_id:document.body.dataset.lp||'pharma-hitori-image-v5',cta_variant:document.body.dataset.cta,step:current,...extra}; if(typeof window.gtag==='function') window.gtag('event',event,data); else {window.dataLayer=window.dataLayer||[];window.dataLayer.push({event,...data});} }
  function viewed() { clearTimeout(timer);timer=setTimeout(()=>{if(document.visibilityState!=='visible'||dialog.open||seen.has(current))return;seen.add(current);emit('swipe_view');if(current===last)emit('swipe_complete');},600); }
  function activate(n) {
   if(n!==current){emit('swipe_leave',{visible_ms:Math.round(performance.now()-started)});current=n;started=performance.now();}
