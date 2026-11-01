@@ -7,8 +7,6 @@
  const seen=new Set(),ratios=new Map(),last=slides.length;
  const variant=(new URLSearchParams(location.search).get('cta')||'b').toLowerCase();
  if(/^[abcd]$/.test(variant))document.body.dataset.cta=variant;
- const top=(new URLSearchParams(location.search).get('top')||'').toLowerCase();
- if(/^[abcd]$/.test(top))document.documentElement.dataset.top=top;
  // Images load only for the current slide and its neighbours; the blurred backdrop is added only where the art is narrower than the screen
  function loadSlide(slide){
   const img=slide.querySelector('.art>img');

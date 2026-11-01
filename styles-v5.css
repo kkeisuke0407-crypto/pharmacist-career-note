@@ -26,8 +26,8 @@
  --frame:min(100vw,var(--frame-max));
  --vh:100svh;
  --dock-min:calc(64px + env(safe-area-inset-bottom));
- /* Space above the art (0 = art touches the top). Trial layouts set it with ?top=a|b|c|d */
- --top-h:0px;
+ /* Top bar (PR + progress): spare height is split so the art and the CTA sit in the middle; never below 28px so the PR mark keeps its place */
+ --top-h:max(28px, min(96px, calc((var(--vh) - var(--frame) * 1.5 - 84px) / 2)));
  /* Image fills the width; it only narrows when the screen is too short to keep the dock */
  --img-h:min(calc(var(--frame) * 1.5), calc(var(--vh) - var(--top-h) - var(--dock-min)));
  --img-w:calc(var(--img-h) / 1.5);
@@ -46,8 +46,6 @@ body[data-cta="b"] { --cta-bg:linear-gradient(#ff9a1f,#f26a00); --cta-font:"Noto
 body[data-cta="c"] { --cta-bg:#ffd83a; --cta-ink:#1b1b1b; --cta-sub:#1b1b1b; --cta-font:"Zen Kaku Gothic New",var(--font-display); --cta-weight:900; --cta-edge:3px solid #1b1b1b; --cta-depth:1.2cqw 1.2cqw 0 #1b1b1b; --cta-depth-dock:3px 3px 0 #1b1b1b; }
 body[data-cta="d"] { --cta-bg:linear-gradient(#ee2a2a,#c80f14); --cta-font:"Zen Maru Gothic",var(--font-display); --cta-weight:900; --cta-edge:2px solid #fff; --cta-depth:0 0 0 .6cqw #c80f14,0 1.4cqw 0 .6cqw #8c0a0e,0 2cqw 5cqw oklch(35% .12 25 / .3); --cta-depth-dock:0 0 0 2px #c80f14,0 4px 0 2px #8c0a0e; --cta-sub:#ffe45c; }
 @supports(height:100dvh) { :root { --vh:100dvh; } }
-/* Trial: split the spare height so the art and the CTA sit in the middle */
-:root[data-top] { --top-h:max(0px, min(96px, calc((var(--vh) - var(--frame) * 1.5 - 84px) / 2))); }
 * { box-sizing:border-box; }
 html,body { margin:0; width:100%; height:100%; overflow:hidden; background:var(--color-paper); color:var(--color-ink); font:400 16px/1.6 var(--font-body); }
 button,a { -webkit-tap-highlight-color:transparent; }
@@ -97,9 +95,6 @@ body[data-step="6"] .tap-hint i { animation:tap-ring 1s var(--ease-out) 1.2s inf
 
 /* Dock: the space under the art. Guide on 1-5, CTA on 6-10, site info on 11 */
 .dock { position:fixed; z-index:20; left:50%; bottom:0; transform:translateX(-50%); width:var(--frame); height:var(--dock-h); display:grid; place-items:center; padding:8px max(12px,env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-right)); background:var(--color-paper); }
-.progress { position:absolute; top:0; left:0; right:0; display:flex; gap:2px; height:3px; }
-.progress span { flex:1; background:var(--color-rule); }
-.progress span[data-read="true"] { background:var(--color-accent); }
 .dock__guide,.sticky-cta,.dock__footer { grid-area:1/1; }
 .dock__guide { display:flex; align-items:center; gap:10px; font:700 14px/1.4 var(--font-body); color:var(--color-ink); }
 .sticky-cta { width:100%; }
@@ -131,17 +126,12 @@ body[data-moved="true"] .hint__finger { animation:none; transform:translateX(-26
 @keyframes kiran-2s { 0%,20% {opacity:0;left:-40%} 23% {opacity:1} 40% {opacity:1;left:130%} 42%,100% {opacity:0;left:130%} }
 
 /* PR badge fixed at the top right of the frame on every page */
-.pr-badge { position:fixed; z-index:22; top:calc(var(--top-h) + var(--img-h) * .0225); left:calc(50% - var(--img-w) / 2 + var(--img-w) * .018); translate:0 -50%; margin:0; padding:2px 6px; border:1.5px solid oklch(30% .01 85); border-radius:3px; background:oklch(99% .005 85); color:oklch(25% .01 85); font:700 12px/1.2 var(--font-body); letter-spacing:.06em; pointer-events:none; }
-/* Trial top bars: a = blank space, b = progress on top, c = site name, d = site name + progress */
-.topbar { display:none; position:fixed; z-index:21; top:0; left:50%; translate:-50% 0; width:var(--frame); height:var(--top-h); flex-direction:column; justify-content:center; align-items:center; gap:8px; padding:0 16px; }
-:root:is([data-top="b"],[data-top="c"],[data-top="d"]) .topbar { display:flex; }
-.topbar__name { margin:0; font:800 15px/1.2 var(--font-display); letter-spacing:.08em; color:var(--color-accent); }
-.topbar__name small { display:block; margin-top:3px; font:400 10px/1 var(--font-body); letter-spacing:.04em; color:var(--color-muted); text-align:center; }
-.topbar__progress { display:flex; gap:3px; width:100%; height:4px; }
+.pr-badge { flex:0 0 auto; margin:0; padding:2px 6px; border:1.5px solid oklch(30% .01 85); border-radius:3px; background:oklch(99% .005 85); color:oklch(25% .01 85); font:700 12px/1.2 var(--font-body); letter-spacing:.06em; }
+/* Top bar: PR mark, then the reading progress across the rest of the width */
+.topbar { position:fixed; z-index:21; top:0; left:50%; translate:-50% 0; width:var(--frame); height:var(--top-h); display:flex; align-items:center; gap:10px; padding:0 max(14px,env(safe-area-inset-right)) 0 max(14px,env(safe-area-inset-left)); background:var(--color-paper); }
+.topbar__progress { flex:1; display:flex; gap:3px; height:4px; }
 .topbar__progress span { flex:1; border-radius:2px; background:var(--color-rule); }
 .topbar__progress span[data-read="true"] { background:var(--color-accent); }
-:root[data-top="b"] .topbar__name,:root[data-top="c"] .topbar__progress { display:none; }
-:root:is([data-top="b"],[data-top="d"]) .dock .progress { display:none; }
 
 /* Mouse users get side arrows; phones swipe */
 .side-nav { display:none; }
